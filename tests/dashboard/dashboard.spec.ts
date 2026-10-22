@@ -1,12 +1,12 @@
 import { test } from '@playwright/test';
-import { getAdminLoginLink } from '../../utils/adminAuth';
+import { getAdminLoginLink } from '../../utils/auth/getAdminLoginLink';
 import { AdminDashboardPage } from '../../pages/dashboard/dashboard.page';
 
 test('Login from admin and verify dashboard is visible', async ({ page }) => {
     const dashboardPage = new AdminDashboardPage(page);
 
     await test.step('Login via admin link', async () => {
-        await page.goto(await getAdminLoginLink());
+        await page.goto(await getAdminLoginLink(process.env.PROFESSIONAL_INSTAGRAM_SHOP_ID));
     });
 
     await test.step('Verify dashboard is visible', async () => {
