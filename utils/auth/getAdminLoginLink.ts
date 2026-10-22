@@ -1,19 +1,25 @@
 // helpers/adminAuth.ts
 import { request } from '@playwright/test';
-//import { getEnv } from './env';
+import dotenv from 'dotenv';
+import { refreshToken } from './refreshToken';
 
-export async function getAdminLoginLink() {
+dotenv.config();
+
+export async function getAdminLoginLink(shopId?: string): Promise<string> {
+    const access_token = await refreshToken();
+
     const apiContext = await request.newContext({
         baseURL: process.env.ADMIN_API_BASE_URL,
     });
+    const shop_id = shopId || process.env.SHOP_ID!;
 
     const response = await apiContext.get('/adminapi/app_login_link', {
         params: {
-            shop_id: process.env.SHOP_ID!,
+            shop_id: shop_id,
             can_update: 'true',
         },
         headers: {
-            authorization: `Bearer ${process.env.ADMIN_JWT_TOKEN}`,
+            authorization: `Bearer ${access_token}`,
             accept: '*/*',
         },
     }
